@@ -40,6 +40,7 @@ def LinearLearning(xmodel, ymodel):
     sum_yi = 0
     n = k_samples
     wage = [0.33, 0.01, 0.33, 0.33]
+    Linear_aprox_all = []  
     #Couting an for every attribute
     for m in range(X_attributes):
         for k in range(k_samples):
@@ -53,13 +54,39 @@ def LinearLearning(xmodel, ymodel):
         bsum_nom = sum_yi - an * sum_xi
         bsum_denom = n
         bn = bsum_nom/bsum_denom      
-        a_coeff.append(an*wage[m])  
-        b_coeff.append(bn*wage[m]) 
+        a_coeff.append(an)  
+        b_coeff.append(bn) 
         sum_xiyi = 0
         sum_xixi = 0
         sum_xi = 0
         sum_yi = 0
+
+    for m in range(len(a_coeff)):
+        Linear_aprox = []
+        xn = []
+        y=xmodel.iloc[:,m].min() 
+        dt = (xmodel.iloc[:,m].max()  - y)/k_samples     
+        for k in range(k_samples):     
+            y = y+dt
+            xn.append(y)
+            Linear_aprox.append((a_coeff[m]*y+b_coeff[m]))
+        
+        Linear_aprox_all.append(Linear_aprox)
+        
+    #Error calculation 
+    Error_delta = []
+    for m in range(X_attributes): 
+        err = 0
+        for k in range(k_samples):
+              err = err +  Linear_aprox_all[m][k] - ymodel[k]
+        Error_delta.append(err/k_samples)   
+    print(Error_delta)
+    #Adding wages to coefficients    
+    for m in range(len(a_coeff)):
+        a_coeff[m] = a_coeff[m]*wage[m]
+        b_coeff[m] = b_coeff[m]*wage[m]
     coeff = [a_coeff,b_coeff]
+    
     return coeff
 
 def LinearPrediction(coeff, Xinput):  
@@ -70,7 +97,7 @@ def LinearPrediction(coeff, Xinput):
     for xn in range(len(a_coeff)):
         m_coef.append (Xinput[xn]*a_coeff[xn])
     epsilon = sum(b_coeff)
-    Youtput = sum(m_coef + epsilon)
+    Youtput = sum(m_coef) + epsilon
     return Youtput                   
 
 coeffs = LinearLearning(x_model,y_model)
@@ -109,18 +136,8 @@ wage = [0.33, 0.01, 0.33, 0.33]
 for m in range(len(a_coeff)):
     Linear_aprox = []
     xn = []
-    if m==0:
-        y=4.0
-        dt = (8.0 - y)/150
-    elif m==1:
-        y=2.0
-        dt = (4.5 - y)/150
-    elif m==2:
-        y=1.0
-        dt = (7.0 - y)/150
-    elif m==3:
-        y=0.0
-        dt = (2.5 - y)/150        
+    y=x_model.iloc[:,m].min() 
+    dt = (x_model.iloc[:,m].max()  - y)/150     
     for k in range(150):     
         y = y+dt
         xn.append(y)
