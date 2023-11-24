@@ -8,13 +8,28 @@ Created on Wed Nov 22 16:20:53 2023
 #no ML libraries - only plot libs
 import pandas as pd
 import matplotlib.pyplot as plt
+def Normalize_column(column):
+    min_val = column.min()
+    max_val = column.max()
+    normalized_column = (column - min_val) / (max_val - min_val)
+    return normalized_column
+
+# Scalling
+def Min_max_scale_dataframe(df):
+    scaled_df = pd.DataFrame()
+    for col in df.columns:
+        scaled_df[col] = Normalize_column(df[col])
+    return scaled_df
+
 #Reading data
 iris = pd.read_csv("iris.data",
                    header = None, 
                    names = ['petal length', 'petal width', 
                             'sepal length', 'sepal width', 'species'])
 #First 4 columns are 4 attributes
-x_model = iris.iloc[:, :4]
+X = iris.iloc[:, :4]
+x_model = Min_max_scale_dataframe(X)
+
 #Last row is output value (spiecie name)
 y_model = iris.loc[:, "species"]
 
@@ -100,7 +115,7 @@ def LinearLearning(xmodel, ymodel):
         for k in range(k_samples):
               err = err +  (Linear_aprox_all[m][k] - ymodel[k])*(Linear_aprox_all[m][k] - ymodel[k])
         Error_delta.append(err/k_samples)   
-    #print(Error_delta)
+    print(Error_delta)
     
     #Based on the squared error, 
     #it is possible to determine weights for individual attributes (their influence on the output value).
@@ -108,7 +123,7 @@ def LinearLearning(xmodel, ymodel):
     one_by_error = [1/e for e in Error_delta]
     
     wage = [(e/sum(one_by_error)) for e in one_by_error]
-    #print(wage)
+    print(wage)
     
     #Adding wages to coefficients    
     for m in range(len(a_coeff)):
@@ -140,14 +155,27 @@ znany_kwiatek1 = [5, 3.2, 1.2, 0.2] #Iris Setosa
 znany_kwiatek2 = [5.6, 3, 4.1, 1.3] #Iris Versicolor
 znany_kwiatek3 = [6.2, 3.4, 5.4, 2.3] #Iris Virginica
 
+#skaling input for 0:1 values
+def scale_row_with_matrix(row, matrix):
+    scaled_row = []
+    for i in range(len(row)):
+        column_values = matrix.iloc[:, i]
+        min_val = min(column_values)
+        max_val = max(column_values)
+        scale = max_val - min_val
+        scaled_value = (row[i] - min_val) / scale if scale != 0 else row[i]
+        scaled_row.append(scaled_value)
+    return scaled_row
 
-
+znany_kwiatek1 = scale_row_with_matrix(znany_kwiatek1,X)
+znany_kwiatek2 = scale_row_with_matrix(znany_kwiatek2,X)
+znany_kwiatek3 = scale_row_with_matrix(znany_kwiatek3,X)
 
 Xinput = znany_kwiatek1                
 
-print(LinearPrediction(coeffs,znany_kwiatek1))
-print(LinearPrediction(coeffs,znany_kwiatek2))
-print(LinearPrediction(coeffs,znany_kwiatek3))
+print(LinearPrediction(coeffs,(znany_kwiatek1)))
+print(LinearPrediction(coeffs,(znany_kwiatek2)))
+print(LinearPrediction(coeffs,(znany_kwiatek3)))
 
 
 #Printing plots and debugging
