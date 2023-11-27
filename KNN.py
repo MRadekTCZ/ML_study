@@ -70,7 +70,7 @@ znany_kwiatek1 = scale_row_with_matrix(znany_kwiatek1,X)
 znany_kwiatek2 = scale_row_with_matrix(znany_kwiatek2,X)
 znany_kwiatek3 = scale_row_with_matrix(znany_kwiatek3,X)
 
-#K nearest neighbors algorithm - i used it for k = 1
+#K nearest neighbors algorithm - i used it for k = 5 (algorithm i choosing best fitting output from avearage of k(5) nearest neighbours)
 def KNN(New_data, Base_data):
     distances = []
     for n in range(Base_data.shape[0]):
@@ -79,19 +79,22 @@ def KNN(New_data, Base_data):
     return distances
 
 def KNN_det(distances,Y_model, k):
-    shortest_distance = min(distances)
-    i_short = distances.index(shortest_distance)
-    return y_model[i_short]
+    indices_of_smallest = sorted(range(len(distances)), key=lambda i: distances[i])[:k]
+    smallest_values = [distances[i] for i in indices_of_smallest]
+    selected_values = [Y_model[i] for i in indices_of_smallest]
+    total_sum = sum(selected_values)
+    mean = total_sum / len(selected_values) if selected_values else 0
+    return mean
 
 
-
+#Algorithm test -predicting from 5 NN
 Classification = []
 
 evaluation = 0
 for row in range(len(y_model)):
      KNN_distances = []
      KNN_distances = KNN(x_model.iloc[row,:], x_model)
-     Y_det = KNN_det(KNN_distances, y_model)
+     Y_det = KNN_det(KNN_distances, y_model, 5)
      Classification.append(Y_det)
 
 for i in range(len(Classification)):
@@ -99,12 +102,12 @@ for i in range(len(Classification)):
     if (Classification[i] ==  y_model[i]):
         evaluation = evaluation + 1
         
-#While testing, my prediction is right in about 91%
+#While testing, my prediction is right in about 89%
 print(evaluation / len(Classification)*100)        
 
 
 KNN_distances = []
-KNN_distances = KNN(other, x_model)
-Y_det = KNN_det(KNN_distances, y_model)
+KNN_distances = KNN(znany_kwiatek2, x_model)
+Y_det = KNN_det(KNN_distances, y_model, 5)
 
 print(Y_det)
