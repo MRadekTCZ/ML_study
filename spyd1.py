@@ -1,7 +1,7 @@
-# Zaczynamy od załadowania bibliotek. Te najpopularniejsze to
-# pandas - do pracy z danymi
-# matplotlib - do rysowania wykresow
-# sklearn - zawierający gotowe funkcje modelujące dane
+# We start by loading libraries. The most popular ones are
+# pandas - for working with data
+# matplotlib - for drawing graphs
+# sklearn - containing ready-made functions for modeling data
  
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,11 +9,11 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
  
-# tutaj ładujemy dane do obiektu data frame z biblioteki pandas
-# plik CSV nie posiada nagłówka dlatego header=None
-# kolumnom nadajemy nazwy korzystając z parametru names
-# W skryptach ML dane trzeba skądś pobrać, stad znajomość polecenia 
-# read_csv jest super przydatna
+# here we load the data into a data frame object from the pandas library
+# the CSV file has no header, so header=None
+# We name the columns using the names parameter
+# In ML scripts, you have to get the data from somewhere, so knowing the command 
+# read_csv is super useful
  
 iris = pd.read_csv("iris.data",
                    header = None, 
@@ -44,35 +44,35 @@ flowers = [iris_1, iris_2, iris_3, other]
 species_predict = lr.predict(flowers)
 print(species_predict)
 
-# można sprawdzic rozmiar wczytanego zbioru
-# jeśli obiekt ma więcej wymiarów, to można niezależnie sprawdzać każdy z nich
-# W skryptach ML, często trzeba zainicjować rozmiary innych obiektów zależnie od
-# rozmiaru danych wejściowych. Robi się to korzystając własnie z właściwości shape
+# you can check the size of the loaded set
+# if the object has more dimensions, you can independently check each of them
+# In ML scripts, you often need to initialize the sizes of other objects depending on the
+# the size of the input data. This is done by using the shape property
 iris.shape
 iris.shape[0]
 iris.shape[1]
 i =8
-# dalej przygotowujemy wykres - tutaj wyznaczenie wartości min i max dla 
-# 2 wybranych kolumn z rozmiarami kwiatów. Kiedy chcesz się odwołać do całej kolumny w data frame,
-# to w nawiasie kwadratowym podajesz nazwę tej kolumny
+# further prepare the chart - here determining the min and max values for the 
+# 2 selected columns with flower sizes. When you want to refer to an entire column in the data frame,
+# then in square brackets you give the name of this column
 x_min, x_max = iris['petal length'].min() - .5, iris['petal length'].max() + .5
 y_min, y_max = iris['petal width'].min() - .5, iris['petal width'].max() + .5
  
-# każdy gatunek ma być wyświetlony w innym kolorze - definiujemy słownik
+# each species to be displayed in a different color - we define the dictionary
 colors = {'Iris-setosa':'red', 'Iris-versicolor':'blue', 'Iris-virginica':'green'}
  
-# tworzymy obiekt odpowiedzialny za rysowany wykres i jego współrzędne
-# instrukcje odtąd aż do plt.show() uruchom zaznaczając cały ten blok kodu
+# create an object responsible for the chart to be drawn and its coordinates
+# instructions from now until plt.show() run by selecting this entire block of code
 fig, ax = plt.subplots(figsize=(8, 6))
  
-# grupujemy dane ze względu na gatunek i rysujemy dane. Korzystamy tu z metody groupby obiektu data frame
-# funkcja zwraca klucz identyfikujący nazwę grupy (tutaj jest to nazwa gatunku kwiatu) oraz
-# próbki wchodzące w skład tej grupy. To pozwala rysować każdą grupę w innym kolorze
+# we group the data by species and draw the data. Here we use the groupby method of the data frame object
+# function returns a key identifying the name of the group (here it is the name of the flower species) and the
+# samples included in this group. This allows us to draw each group in a different color
 for key, group in iris.groupby(by='species'):
     plt.scatter(group['petal length'], group['petal width'], 
                 c=colors[key], label=key)
  
-# dodajemy legendę i opis osi
+# add legend and axis description
 ax.legend()
 plt.xlabel('petal length')
 plt.ylabel('petal width')
@@ -82,9 +82,9 @@ ax.set_title("IRIS DATASET CATEGORIZED")
  
 plt.show()
  
-# teraz podobny wykres można sporządzić dla sepal
-# pamiętaj o uruchomieniu mając zaznaczony blok kodu odtąd aż do plt.show()
-# kroki są takie same jak w poprzednim przykładzie
+# now a similar graph can be made for sepal
+# remember to run having the code block selected from now until plt.show()
+# the steps are the same as in the previous example
 x_min, x_max = iris['sepal length'].min() - .5, iris['sepal length'].max() + .5
 y_min, y_max = iris['sepal width'].min() - .5, iris['sepal width'].max() + .5
  
@@ -93,8 +93,8 @@ colors = {'Iris-setosa':'red', 'Iris-versicolor':'blue', 'Iris-virginica':'green
 fig, ax = plt.subplots(figsize=(8, 6))
  
 for key, group in iris.groupby(by='species'):
-    # funkcja scatter przyjmuje argumenty - współrzędne X punktów, współrzędne Y punktów,
-    # kolor i nazwę rysowanej grupy
+    # scatter function takes arguments - X coordinates of points, Y coordinates of points,
+    # color and name of the group being drawn
     plt.scatter(group['sepal length'], group['sepal width'], 
                 c=colors[key], label=key)
  
@@ -107,35 +107,29 @@ ax.set_title("IRIS DATASET CATEGORIZED")
  
 plt.show()
 
-# utwórz wykres składający się z 4 małych wykresów
+# create a chart consisting of 4 small charts
 fig, ax = plt.subplots(2,2,figsize=(10, 6))
  
-# aktualnie rysowanie odbędzie się w określonym pod-wykresie
+
 plt_position = 1
  
-# obrazujemy zależność miedzy tą zmienną, a pozostałymi cechami próbek
+# we illustrate the relationship between this variable and the other characteristics of the samples
 feature_x= 'petal width'
  
-# dla każdej cechy opisującej kwiaty
 for feature_y in iris.columns[:4]:
  
-    # wybierz kolejny pod wykres
     plt.subplot(2, 2, plt_position) 
  
-    # i rysuj osobne wykresy dla każdego gatunku (te 3 rysowane tu wykresy
-    # nakładają sie na siebie, co pozwala automatycznie generować legendę)
     for species, color in colors.items():
-        # podczas rysowanie należy odfiltrować tylko kwiaty jednego gatunku
-        # zobacz jak filtrować dane. Służy do tego funkcja loc wywoływana dla data frame
-        # wyrażenie w nawiasie kwadratowym ma zwracać True/False. Zwrócone będą wiersze,
-        # gdzie wyrażenie ma wartość True. Po przecinku znajduje się nazwa kolumny, która ma być zwrócona
+        # when drawing, filter out only flowers of one species
+        # see how to filter the data. This is done by the loc function called for the data frame
+        #The expression in square brackets is to return True/False. The rows returned will be,
+        # where the expression has the value True. After the comma is the name of the column to be returned
         plt.scatter(iris.loc[iris['species']==species, feature_x],
                     iris.loc[iris['species']==species, feature_y],
                     label=species,
                     alpha = 0.45, # transparency
                     color=color)
- 
-    # opisujemy wykres
     plt.xlabel(feature_x)
     plt.ylabel(feature_y)
     plt.legend()
