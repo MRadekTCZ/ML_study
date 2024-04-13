@@ -50,11 +50,11 @@ n2 = [1, 1.2, 1.7, 1]
 
 print(Euclidian_dist(n1, n2))
 
-znany_kwiatek1 = [5, 3.2, 1.2, 0.2] #Iris Setosa
-znany_kwiatek2 = [5.6, 3, 4.1, 1.3] #Iris Versicolor
-znany_kwiatek3 = [6.2, 3.4, 5.4, 2.3] #Iris Virginica
+known_flower1 = [5, 3.2, 1.2, 0.2] #Iris Setosa
+known_flower2 = [5.6, 3, 4.1, 1.3] #Iris Versicolor
+known_flower3 = [6.2, 3.4, 5.4, 2.3] #Iris Virginica
 other = [1, 2, 3, 4]
-flowers = [znany_kwiatek1, znany_kwiatek2, znany_kwiatek3, other]
+flowers = [known_flower1, known_flower2, known_flower3, other]
 def scale_row_with_matrix(row, matrix):
     scaled_row = []
     for i in range(len(row)):
@@ -66,9 +66,9 @@ def scale_row_with_matrix(row, matrix):
         scaled_row.append(scaled_value)
     return scaled_row
 #inputs should be scalled to make equal wage for different factors 
-znany_kwiatek1 = scale_row_with_matrix(znany_kwiatek1,X)
-znany_kwiatek2 = scale_row_with_matrix(znany_kwiatek2,X)
-znany_kwiatek3 = scale_row_with_matrix(znany_kwiatek3,X)
+known_flower1 = scale_row_with_matrix(known_flower1,X)
+known_flower2 = scale_row_with_matrix(known_flower2,X)
+known_flower3 = scale_row_with_matrix(known_flower3,X)
 
 #K nearest neighbors algorithm - i used it for k = 5 (algorithm i choosing best fitting output from avearage of k(5) nearest neighbours)
 def KNN(New_data, Base_data):
@@ -107,7 +107,7 @@ print(evaluation / len(Classification)*100)
 
 
 KNN_distances = []
-KNN_distances = KNN(znany_kwiatek2, x_model)
+KNN_distances = KNN(known_flower2, x_model)
 Y_det = KNN_det(KNN_distances, y_model, 5)
 
 print(Y_det)
