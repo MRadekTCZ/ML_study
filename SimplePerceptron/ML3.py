@@ -9,7 +9,7 @@ from sklearn.linear_model import Perceptron
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import pandas as pd
-
+import joblib
 # Load data
 df = pd.read_csv('breast_cancer.csv')
 
@@ -27,7 +27,7 @@ y_test = df.iloc[501:550, 1]
 # Initialize and train the perceptron model
 perceptron = Perceptron(max_iter=10000, eta0=0.1, random_state=42)
 perceptron.fit(X_train, y_train)
-
+joblib.dump(perceptron, 'perceptron_model.pkl')
 # Make predictions
 y_pred = perceptron.predict(X_test)
 
