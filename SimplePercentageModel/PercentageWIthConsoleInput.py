@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun 28 12:45:56 2024
 
-@author: Maciek
-"""
 #Importing libraries
 from sklearn.linear_model import Perceptron
 from sklearn.model_selection import train_test_split
